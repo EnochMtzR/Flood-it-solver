@@ -5,6 +5,7 @@ import IPuzzleParams from "./IPuzzleParams";
 
 export default class Puzzle {
     readonly grid: Grid;
+    readonly colorRange: number
 
     constructor(params: IPuzzleParams) {
         validateParams(params);
@@ -13,6 +14,7 @@ export default class Puzzle {
             : createValueGrid(params.size!, params.colorRange)
 
         this.grid = new Grid(gridValues);
+        this.colorRange = params.colorRange;
     }
 
     flood(floodingColor: number) {
