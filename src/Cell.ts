@@ -1,3 +1,5 @@
+import ICoordinates from "./ICoordinates";
+
 export default class Cell {
     color: number;
     readonly column: number;
@@ -7,5 +9,42 @@ export default class Cell {
         this.column = column;
         this.row = row;
         this.color = color;
+    }
+
+    calculateAdjacentCells(): ICoordinates[] {
+        return [
+            this.topCell(),
+            this.rightCell(),
+            this.bottomCell(),
+            this.leftCell()
+        ]
+    }
+
+    private topCell(): ICoordinates {
+        return {
+            column: this.column,
+            row: this.row - 1
+        }
+    }
+
+    private rightCell(): ICoordinates {
+        return {
+            column: this.column + 1,
+            row: this.row
+        }
+    }
+
+    private bottomCell(): ICoordinates {
+        return {
+            column: this.column,
+            row: this.row + 1
+        }
+    }
+
+    private leftCell(): ICoordinates {
+        return {
+            column: this.column - 1,
+            row: this.row
+        }
     }
 }

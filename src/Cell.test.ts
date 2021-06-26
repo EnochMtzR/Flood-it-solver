@@ -9,5 +9,23 @@ describe("Testing Cell functionality", () => {
         expect(cell.color).toBe(0);
     })
 
-    //TODO: add support for calculating adjacent cells.
+    test("adjacentCells() should return all possible adjacent cells", () => {
+        const cell = new Cell(1, 1, 0);
+        const expectedCells = expectedAdjacentCells();
+
+        const adjacentCells = cell.calculateAdjacentCells();
+
+        expect(adjacentCells).toEqual(expectedCells);
+    })
+
+    //TODO: ADD get key method for visited cells.
 })
+
+function expectedAdjacentCells() {
+    return [
+        { column: 1, row: 0 },
+        { column: 2, row: 1 },
+        { column: 1, row: 2 },
+        { column: 0, row: 1 }
+    ];
+}

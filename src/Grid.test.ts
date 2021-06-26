@@ -30,7 +30,28 @@ describe("Testing Grid functionality", () => {
         expect(origin).toEqual(expectedOrigin);
     })
 
-    // TODO: we should probably add the adjacent cell logic to this as well, as we must verify calculated cells exits.
+    test("getAdjacentCells() should return all adjacentCells", () => {
+        const gridValues = validGridValues();
+        const expectedCells = expectedCenterAdjacentCells();
+        const grid = new Grid(gridValues);
+        const testCell = grid.value[1][1];
+
+        const adjacentCells = grid.getAdjacentCells(testCell);
+
+        expect(adjacentCells).toEqual(expectedCells);
+    })
+
+    test("getAdjacentCells() should return only valid cells", () => {
+        const gridValues = validGridValues();
+        const expectedCells = expectedOriginAdjacentCells();
+        const grid = new Grid(gridValues);
+        const testCell = grid.value[0][0];
+
+        const adjacentCells = grid.getAdjacentCells(testCell);
+
+        expect(adjacentCells).toEqual(expectedCells);
+    })
+
 })
 
 function validGridValues() {
@@ -38,7 +59,7 @@ function validGridValues() {
         [1, 2, 0],
         [0, 1, 2],
         [2, 1, 2]
-    ]
+    ];
 }
 
 function expectedCellBasedGrid() {
@@ -46,6 +67,22 @@ function expectedCellBasedGrid() {
         [new Cell(0, 0, 1), new Cell(1, 0, 2), new Cell(2, 0, 0)],
         [new Cell(0, 1, 0), new Cell(1, 1, 1), new Cell(2, 1, 2)],
         [new Cell(0, 2, 2), new Cell(1, 2, 1), new Cell(2, 2, 2)]
-    ]
+    ];
+}
+
+function expectedCenterAdjacentCells() {
+    return [
+        new Cell(1, 0, 2),
+        new Cell(2, 1, 2),
+        new Cell(1, 2, 1),
+        new Cell(0, 1, 0)
+    ];
+}
+
+function expectedOriginAdjacentCells() {
+    return [
+        new Cell(1, 0, 2),
+        new Cell(0, 1, 0)
+    ];
 }
 
