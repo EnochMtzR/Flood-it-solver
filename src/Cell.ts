@@ -20,6 +20,10 @@ export default class Cell {
         ]
     }
 
+    toString() {
+        return `${this.column},${this.row}`;
+    }
+
     private topCell(): ICoordinates {
         return {
             column: this.column,

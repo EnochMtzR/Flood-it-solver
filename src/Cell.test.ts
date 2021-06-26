@@ -18,7 +18,13 @@ describe("Testing Cell functionality", () => {
         expect(adjacentCells).toEqual(expectedCells);
     })
 
-    //TODO: ADD get key method for visited cells.
+    test("toString() should return a string representing current cell coordinates", () => {
+        const cell = new Cell(2, 0, 1);
+
+        const key = cell.toString();
+
+        expect(key).toBe("2,0");
+    })
 })
 
 function expectedAdjacentCells() {
