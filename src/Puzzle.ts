@@ -1,4 +1,6 @@
+import Cell from "./Cell";
 import Grid from "./Grid";
+import IFloodingState from "./IFloodingState";
 import IPuzzleParams from "./IPuzzleParams";
 
 export default class Puzzle {
@@ -11,6 +13,27 @@ export default class Puzzle {
             : createValueGrid(params.size!, params.colorRange)
 
         this.grid = new Grid(gridValues);
+    }
+
+    flood(floodingColor: number) {
+        const origin = this.grid.getOrigin();
+        const currentState = initializeCurrentState(floodingColor, origin);
+        const cluster = [] as Cell[];
+        let finalClusterSize = 1;
+
+        cluster.push(origin);
+
+        while (cluster.length) {
+            currentState.currentCell = cluster.pop()!;
+            const adjacentCells = this.grid.getAdjacentCells(currentState.currentCell);
+
+            setCurrentCellAsVisited(currentState);
+            finalClusterSize = addAdjacentCellsToCluster(adjacentCells, currentState, cluster, finalClusterSize);
+
+            currentState.currentCell.color = floodingColor;
+        }
+
+        return finalClusterSize;
     }
 }
 
@@ -31,5 +54,43 @@ function createValueGrid(size: number, colorRange: number) {
     }
 
     return result;
+}
+
+function initializeCurrentState(floodingColor: number, origin: Cell) {
+    return {
+        floodingColor,
+        originalColor: origin.color,
+        visitedCells: new Map<string, Cell>()
+    } as IFloodingState;
+}
+
+function setCurrentCellAsVisited({ currentCell, visitedCells }: IFloodingState) {
+    visitedCells.set(currentCell.toString(), currentCell);
+}
+
+function addAdjacentCellsToCluster(adjacentCells: Cell[], currentState: IFloodingState, cluster: Cell[], finalClusterSize: number): number {
+    adjacentCells.forEach(adjacentCell => {
+        if (isAdjacentCellInCluster(adjacentCell, currentState)
+            && !wasAdjacentCellVisited(adjacentCell, currentState)) {
+            cluster.push(adjacentCell);
+            finalClusterSize++;
+        }
+    })
+    return finalClusterSize;
+}
+
+function isAdjacentCellInCluster(
+    adjacentCell: Cell,
+    {
+        originalColor,
+        floodingColor,
+        currentCell
+    }: IFloodingState) {
+    return (currentCell.color === originalColor && adjacentCell.color === originalColor)
+        || adjacentCell.color === floodingColor;
+}
+
+function wasAdjacentCellVisited(adjacentCell: Cell, { visitedCells }: IFloodingState) {
+    return visitedCells.get(adjacentCell.toString());
 }
 

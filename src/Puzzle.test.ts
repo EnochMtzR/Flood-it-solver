@@ -33,4 +33,40 @@ describe("Testing Puzzle functionality", () => {
 
         expect(grid.every(element => element >= 0 && element < 3)).toBe(true);
     })
+
+    test("flood() should fill the current cluster correctly", () => {
+        const grid = [
+            [2, 2, 0],
+            [2, 0, 2],
+            [2, 2, 1]];
+        const expectedGrid = [
+            [1, 1, 0],
+            [1, 0, 2],
+            [1, 1, 1]];
+        const puzzle = new Puzzle({ grid, colorRange: 3 });
+
+        const finalClusterSize = puzzle.flood(1);
+
+        expect(puzzle.grid.toValueArray()).toEqual(expectedGrid);
+        expect(finalClusterSize).toBe(6);
+    })
+
+
+
+    test("flood() should fill only origin when no cluster exists", () => {
+        const grid = [
+            [0, 1, 0],
+            [2, 0, 2],
+            [2, 2, 1]];
+        const expectedGrid = [
+            [2, 1, 0],
+            [2, 0, 2],
+            [2, 2, 1]];
+        const puzzle = new Puzzle({ grid, colorRange: 3 });
+
+        const finalClusterSize = puzzle.flood(2);
+
+        expect(puzzle.grid.toValueArray()).toEqual(expectedGrid);
+        expect(finalClusterSize).toBe(4);
+    })
 })
